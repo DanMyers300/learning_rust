@@ -1,0 +1,30 @@
+{
+  description = "Learning-Rust";
+
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+  };
+
+  outputs = {
+    self,
+    nixpkgs,
+  }: 
+  let
+    system = "x86_64-linux";
+    pkgs = import nixpkgs {
+      inherit system;
+    };
+  in {
+    devShell.${system} = pkgs.mkShell {
+      name = "learning-rust";
+      buildInputs = with pkgs; [
+        cargo
+        rustc
+        rustfmt
+        gcc
+      ];
+    };
+
+    packages.${system}.default = pkgs.callPackage ./nix/default.nix {};
+  };
+}
